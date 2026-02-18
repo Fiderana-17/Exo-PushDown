@@ -18,3 +18,19 @@ FROM invoice i
 WHERE i.status IN ('CONFIRMED', 'PAID')
 GROUP BY i.id, i.customer_name, i.status
 ORDER BY i.id;
+
+SELECT
+    SUM(CASE WHEN i.status = 'PAID'
+                 THEN il.quantity * il.unit_price
+             ELSE 0 END) AS total_paid,
+
+    SUM(CASE WHEN i.status = 'CONFIRMED'
+                 THEN il.quantity * il.unit_price
+             ELSE 0 END) AS total_confirmed,
+
+    SUM(CASE WHEN i.status = 'DRAFT'
+                 THEN il.quantity * il.unit_price
+             ELSE 0 END) AS total_draft
+
+FROM invoice i
+         JOIN invoice_line il ON il.invoice_id = i.id;
