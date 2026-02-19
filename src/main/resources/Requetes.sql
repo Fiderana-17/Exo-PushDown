@@ -62,3 +62,17 @@ FROM invoice i
          CROSS JOIN tax_config t
 GROUP BY i.id, t.rate
 ORDER BY i.id;
+
+
+SELECT
+    SUM(
+            (il.quantity * il.unit_price) * (1 + t.rate / 100) *
+            CASE
+                WHEN i.status = 'PAID' THEN 1
+                WHEN i.status = 'CONFIRMED' THEN 0.5
+                ELSE 0
+                END
+    ) AS weighted_turnover_ttc
+FROM invoice i
+         JOIN invoice_line il ON il.invoice_id = i.id
+         CROSS JOIN tax_config t;
