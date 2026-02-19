@@ -34,3 +34,6 @@ SELECT
 
 FROM invoice i
          JOIN invoice_line il ON il.invoice_id = i.id;
+
+
+SELECT * FROM tax_config;
