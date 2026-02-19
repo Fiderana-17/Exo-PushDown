@@ -19,6 +19,7 @@ WHERE i.status IN ('CONFIRMED', 'PAID')
 GROUP BY i.id, i.customer_name, i.status
 ORDER BY i.id;
 
+
 SELECT
     SUM(CASE WHEN i.status = 'PAID'
                  THEN il.quantity * il.unit_price
@@ -34,6 +35,20 @@ SELECT
 
 FROM invoice i
          JOIN invoice_line il ON il.invoice_id = i.id;
+
+
+SELECT
+    SUM(
+            (il.quantity * il.unit_price) *
+            CASE
+                WHEN i.status = 'PAID' THEN 1
+                WHEN i.status = 'CONFIRMED' THEN 0.5
+                ELSE 0
+                END
+    ) AS weighted_turnover
+FROM invoice i
+         JOIN invoice_line il ON il.invoice_id = i.id;
+
 
 
 SELECT * FROM tax_config;
