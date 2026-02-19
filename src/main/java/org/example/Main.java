@@ -58,6 +58,13 @@ public class Main {
                             + " | TTC " + i.getTotalTtc())
             );
 
+            //Q5B
+            System.out.println("\n---- Q5-B : Chiffre d'affaires pondéré TTC ----");
+            BigDecimal weightedTtc =
+                    dataRetriever.computeWeightedTurnoverTtc(connection);
+
+            System.out.println("Weighted turnover TTC = " + weightedTtc);
+
 
         } catch (Exception e) {
             System.err.println("Erreur: " + e.getMessage());

@@ -169,37 +169,30 @@ public class DataRetriever {
 
     // Q5-B) Chiffre d'affaires TTC pondéré
     public BigDecimal computeWeightedTurnoverTtc(Connection connection) throws SQLException {
-        try {
-            // Version simplifiée sans CTE
-            String sql = """
-            SELECT COALESCE(SUM(
-                il.quantity * il.unit_price * 
-                (1 + (SELECT rate FROM tax_config WHERE label = 'TVA STANDARD' LIMIT 1) / 100) *
-                CASE 
-                    WHEN i.status = 'PAID' THEN 1.0
-                    WHEN i.status = 'CONFIRMED' THEN 0.5
-                    WHEN i.status = 'DRAFT' THEN 0.0
-                    ELSE 0.0
-                END
-            ), 0) AS weighted_turnover_ttc
-            FROM invoice i
-            LEFT JOIN invoice_line il ON il.invoice_id = i.id
-        """;
+        String sql = """
+        SELECT SUM(
+            (il.quantity * il.unit_price) * (1 + t.rate / 100) *
+            CASE
+                WHEN i.status = 'PAID' THEN 1
+                WHEN i.status = 'CONFIRMED' THEN 0.5
+                ELSE 0
+            END
+        ) AS weighted_turnover_ttc
+        FROM invoice i
+        JOIN invoice_line il ON il.invoice_id = i.id
+        CROSS JOIN tax_config t
+    """;
 
-            try (PreparedStatement stmt = connection.prepareStatement(sql);
-                 ResultSet rs = stmt.executeQuery()) {
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
-                if (rs.next()) {
-                    return rs.getBigDecimal("weighted_turnover_ttc");
-                }
+            if (rs.next()) {
+                return rs.getBigDecimal("weighted_turnover_ttc");
             }
-        } catch (SQLException e) {
-            System.err.println("❌ Erreur SQL dans computeWeightedTurnoverTtc: " + e.getMessage());
-            e.printStackTrace();
-            throw e;
         }
 
         return BigDecimal.ZERO;
     }
+
 
 }
