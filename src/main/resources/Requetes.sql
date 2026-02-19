@@ -50,5 +50,15 @@ FROM invoice i
          JOIN invoice_line il ON il.invoice_id = i.id;
 
 
-
 SELECT * FROM tax_config;
+
+SELECT
+    i.id,
+    SUM(il.quantity * il.unit_price) AS total_ht,
+    SUM(il.quantity * il.unit_price) * t.rate / 100 AS total_tva,
+    SUM(il.quantity * il.unit_price) * (1 + t.rate / 100) AS total_ttc
+FROM invoice i
+         JOIN invoice_line il ON il.invoice_id = i.id
+         CROSS JOIN tax_config t
+GROUP BY i.id, t.rate
+ORDER BY i.id;
