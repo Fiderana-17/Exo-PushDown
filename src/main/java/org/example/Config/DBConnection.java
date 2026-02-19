@@ -1,23 +1,20 @@
 package org.example.Config;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DBConnection {
-    private final String url;
-    private final String username;
-    private final String password;
 
-    public DBConnection() {
-        this.url = System.getenv("DB_URL");
-        this.username = System.getenv("DB_USERNAME");
-        this.password = System.getenv("DB_PASSWORD");
-    }
-
-    public Connection getConnection(){
+    public Connection getConnection() {
         try {
-            return DriverManager.getConnection(url,username, password);
+            Dotenv dotenv = Dotenv.load();
+            String jdbcUrl = dotenv.get("DB_URL");
+            String user = dotenv.get("DB_USER");
+            String password = dotenv.get("DB_PASSWORD");
+
+            return DriverManager.getConnection(jdbcUrl, user, password);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
