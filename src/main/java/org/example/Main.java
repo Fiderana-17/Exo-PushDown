@@ -40,6 +40,12 @@ public class Main {
             System.out.println(statusTotals);
             System.out.println();
 
+            // Q4 : Chiffre d'affaires pondéré
+            System.out.println("---- Q4 : Chiffre d'affaires pondéré ----");
+            Double weightedTurnover = dataRetriever.computeWeightedTurnover(connection);
+            System.out.println(weightedTurnover);
+            System.out.println();
+
 
         } catch (Exception e) {
             System.err.println("Erreur: " + e.getMessage());

@@ -106,4 +106,34 @@ public class DataRetriever {
 
         return new InvoiceStatusTotals(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
     }
+
+    // Q4 - Chiffre d'affaires pondéré
+    public Double computeWeightedTurnover(Connection connection) throws SQLException {
+        String sql = """
+            SELECT COALESCE(SUM(
+                il.quantity * il.unit_price * 
+                CASE 
+                    WHEN i.status = 'PAID' THEN 1.0
+                    WHEN i.status = 'CONFIRMED' THEN 0.5
+                    WHEN i.status = 'DRAFT' THEN 0.0
+                    ELSE 0.0
+                END
+            ), 0) AS weighted_turnover
+            FROM invoice i
+            LEFT JOIN invoice_line il ON il.invoice_id = i.id
+        """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getDouble("weighted_turnover");
+            }
+        }
+
+        return 0.0;
+    }
+
+
+
 }
