@@ -25,6 +25,15 @@ public class Main {
             totals.forEach(System.out::println);
             System.out.println();
 
+            // Q2 : Factures confirmées et payées
+            System.out.println("---- Q2 : Factures confirmées et payées ----");
+            List<InvoiceTotal> confirmedAndPaid = dataRetriever.findConfirmedAndPaidInvoiceTotals(connection);
+            confirmedAndPaid.forEach(invoice ->
+                    System.out.println(invoice.getId() + " | " + invoice.getCustomerName() + " | " +
+                            invoice.getStatus() + " | " + invoice.getTotal())
+            );
+            System.out.println();
+
 
         } catch (Exception e) {
             System.err.println("Erreur: " + e.getMessage());
