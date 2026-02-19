@@ -80,4 +80,30 @@ public class DataRetriever {
 
         return results;
     }
+
+    // Q3 - Totaux cumulés par statut
+    public InvoiceStatusTotals computeStatusTotals(Connection connection) throws SQLException {
+        String sql = """
+            SELECT 
+                COALESCE(SUM(CASE WHEN i.status = 'PAID' THEN il.quantity * il.unit_price ELSE 0 END), 0) AS total_paid,
+                COALESCE(SUM(CASE WHEN i.status = 'CONFIRMED' THEN il.quantity * il.unit_price ELSE 0 END), 0) AS total_confirmed,
+                COALESCE(SUM(CASE WHEN i.status = 'DRAFT' THEN il.quantity * il.unit_price ELSE 0 END), 0) AS total_draft
+            FROM invoice i
+            LEFT JOIN invoice_line il ON il.invoice_id = i.id
+        """;
+
+        try (PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            if (rs.next()) {
+                return new InvoiceStatusTotals(
+                        rs.getBigDecimal("total_paid"),
+                        rs.getBigDecimal("total_confirmed"),
+                        rs.getBigDecimal("total_draft")
+                );
+            }
+        }
+
+        return new InvoiceStatusTotals(BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
+    }
 }

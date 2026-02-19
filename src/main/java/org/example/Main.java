@@ -34,6 +34,12 @@ public class Main {
             );
             System.out.println();
 
+            // Q3 : Totaux cumulés par statut
+            System.out.println("---- Q3 : Totaux cumulés par statut ----");
+            InvoiceStatusTotals statusTotals = dataRetriever.computeStatusTotals(connection);
+            System.out.println(statusTotals);
+            System.out.println();
+
 
         } catch (Exception e) {
             System.err.println("Erreur: " + e.getMessage());
