@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
-    <file url="file://$PROJECT_DIR$/src/main/java/org/example/Ressources/Data.sql" value="001a7644-c446-4b12-8b0f-e9643dec6dea" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/Data.sql" value="001a7644-c446-4b12-8b0f-e9643dec6dea" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/Donnees.sql" value="001a7644-c446-4b12-8b0f-e9643dec6dea" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/Requetes.sql" value="001a7644-c446-4b12-8b0f-e9643dec6dea" />
   </component>
 </project>
