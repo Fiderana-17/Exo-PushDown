@@ -46,6 +46,18 @@ public class Main {
             System.out.println(weightedTurnover);
             System.out.println();
 
+            // Q5 : Totaux HT, TVA, TTC
+            System.out.println("---- Q5-A : Totaux HT / TVA / TTC ----");
+            List<InvoiceTaxSummary> taxSummaries =
+                    dataRetriever.findInvoiceTaxSummaries(connection);
+
+            taxSummaries.forEach(i ->
+                    System.out.println(i.getId()
+                            + " | HT " + i.getTotalHt()
+                            + " | TVA " + i.getTotalTva()
+                            + " | TTC " + i.getTotalTtc())
+            );
+
 
         } catch (Exception e) {
             System.err.println("Erreur: " + e.getMessage());
